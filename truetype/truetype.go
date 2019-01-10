@@ -482,6 +482,26 @@ func (f *Font) HMetric(scale fixed.Int26_6, i Index) HMetric {
 	return h
 }
 
+func (f *Font) GetAscender() fixed.Int26_6 {
+	var ascender fixed.Int26_6
+
+	if len(f.os2) >= 72 {
+		ascender = fixed.Int26_6(int16(u16(f.os2, 68)))
+	}
+
+	return ascender
+}
+
+func (f *Font) GetDescender() fixed.Int26_6 {
+	var descender fixed.Int26_6
+
+	if len(f.os2) >= 72 {
+		descender = fixed.Int26_6(int16(u16(f.os2, 70)))
+	}
+
+	return descender
+}
+
 // unscaledVMetric returns the unscaled vertical metrics for the glyph with
 // the given index. yMax is the top of the glyph's bounding box.
 func (f *Font) unscaledVMetric(i Index, yMax fixed.Int26_6) (v VMetric) {
@@ -501,8 +521,8 @@ func (f *Font) unscaledVMetric(i Index, yMax fixed.Int26_6) (v VMetric) {
 	// the ascender and descender, are described at
 	// http://www.microsoft.com/typography/otspec/os2.htm
 	if len(f.os2) >= 72 {
-		sTypoAscender := fixed.Int26_6(int16(u16(f.os2, 68)))
-		sTypoDescender := fixed.Int26_6(int16(u16(f.os2, 70)))
+		sTypoAscender := f.GetAscender()
+		sTypoDescender := f.GetDescender()
 		return VMetric{
 			AdvanceHeight:  sTypoAscender - sTypoDescender,
 			TopSideBearing: sTypoAscender - yMax,
