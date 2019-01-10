@@ -158,7 +158,7 @@ func (c *Context) drawContour(ps []truetype.Point, dx, dy fixed.Int26_6) {
 // rasterize returns the advance width, glyph mask and integer-pixel offset
 // to render the given glyph at the given sub-pixel offsets.
 // The 26.6 fixed point arguments fx and fy must be in the range [0, 1).
-func (c *Context) rasterize(glyph truetype.Index, fx, fy fixed.Int26_6) (
+func (c *Context) Rasterize(glyph truetype.Index, fx, fy fixed.Int26_6) (
 	fixed.Int26_6, *image.Alpha, image.Point, error) {
 
 	if err := c.glyphBuf.Load(c.f, c.scale, glyph, c.hinting); err != nil {
@@ -195,7 +195,7 @@ func (c *Context) rasterize(glyph truetype.Index, fx, fy fixed.Int26_6) (
 // render the given glyph at the given sub-pixel point. It is a cache for the
 // rasterize method. Unlike rasterize, p's co-ordinates do not have to be in
 // the range [0, 1).
-func (c *Context) glyph(glyph truetype.Index, p fixed.Point26_6) (
+func (c *Context) Glyph(glyph truetype.Index, p fixed.Point26_6) (
 	fixed.Int26_6, *image.Alpha, image.Point, error) {
 
 	// Split p.X and p.Y into their integer and fractional parts.
@@ -211,7 +211,7 @@ func (c *Context) glyph(glyph truetype.Index, p fixed.Point26_6) (
 		return e.advanceWidth, e.mask, e.offset.Add(image.Point{ix, iy}), nil
 	}
 	// Rasterize the glyph and put the result into the cache.
-	advanceWidth, mask, offset, err := c.rasterize(glyph, fx, fy)
+	advanceWidth, mask, offset, err := c.Rasterize(glyph, fx, fy)
 	if err != nil {
 		return 0, nil, image.Point{}, err
 	}
@@ -241,7 +241,7 @@ func (c *Context) DrawString(s string, p fixed.Point26_6) (fixed.Point26_6, erro
 			}
 			p.X += kern
 		}
-		advanceWidth, mask, offset, err := c.glyph(index, p)
+		advanceWidth, mask, offset, err := c.Glyph(index, p)
 		if err != nil {
 			return fixed.Point26_6{}, err
 		}
