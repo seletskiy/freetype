@@ -565,6 +565,21 @@ func (f *Font) Kern(scale fixed.Int26_6, i0, i1 Index) fixed.Int26_6 {
 	return 0
 }
 
+type segment struct {
+	Start rune
+	End   rune
+}
+
+func (f *Font) Chars() []segment {
+	segments := []segment{}
+
+	for _, cm := range f.cm {
+		segments = append(segments, segment{rune(cm.start), rune(cm.end)})
+	}
+
+	return segments
+}
+
 // Parse returns a new Font for the given TTF or TTC data.
 //
 // For TrueType Collections, the first font in the collection is parsed.
