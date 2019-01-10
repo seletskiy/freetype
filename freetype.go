@@ -328,6 +328,10 @@ func (c *Context) SetClip(clip image.Rectangle) {
 	c.clip = clip
 }
 
+func (c *Context) GetScale() fixed.Int26_6 {
+	return c.scale
+}
+
 // TODO(nigeltao): implement Context.SetGamma.
 
 // NewContext creates a new Context.
